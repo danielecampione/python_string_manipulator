@@ -191,14 +191,19 @@ class StringManipulatorApp:
 
     def create_interface(self):
         """Crea l'interfaccia grafica."""
-        # Frame scrollabile
+        # Frame principale
         self.main_frame = ttk.Frame(self.root)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.canvas = tk.Canvas(self.main_frame)
+        # Frame per il contenuto scrollabile
+        self.scrollable_frame = ttk.Frame(self.main_frame)
+        self.scrollable_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Canvas e Scrollbar
+        self.canvas = tk.Canvas(self.scrollable_frame)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.scrollbar = ttk.Scrollbar(self.main_frame, orient=tk.VERTICAL, command=self.canvas.yview)
+        self.scrollbar = ttk.Scrollbar(self.scrollable_frame, orient=tk.VERTICAL, command=self.canvas.yview)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
@@ -249,8 +254,12 @@ class StringManipulatorApp:
         self.create_label_and_entry("Template:", self.string_manipulator.template)
         self.create_label_and_entry("Reduce:", self.string_manipulator.reduce)
 
+        # Frame per il pulsante "Chiudi"
+        self.bottom_frame = ttk.Frame(self.main_frame)
+        self.bottom_frame.pack(fill=tk.X, side=tk.BOTTOM)
+
         # Pulsante Chiudi
-        close_button = ttk.Button(self.second_frame, text="Chiudi", command=self.root.destroy)
+        close_button = ttk.Button(self.bottom_frame, text="Chiudi", command=self.root.destroy)
         close_button.pack(pady=10)
 
     def create_label_and_entry(self, label_text, operation):
