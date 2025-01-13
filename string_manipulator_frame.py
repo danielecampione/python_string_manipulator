@@ -174,7 +174,10 @@ class StringManipulator:
     @staticmethod
     def reduce(text):
         """Riduce il testo unendo le parole con uno spazio."""
-        return reduce(lambda x, y: x + ' ' + y, text.split())
+        words = text.split()
+        if not words:  # Se la lista è vuota
+            return ""
+        return reduce(lambda x, y: x + ' ' + y, words)
 
 
 # Classe per l'interfaccia grafica
@@ -262,6 +265,10 @@ class StringManipulatorApp:
         close_button = ttk.Button(self.bottom_frame, text="Chiudi", command=self.root.destroy)
         close_button.pack(pady=10)
 
+        # Barra di stato
+        self.status_bar = ttk.Label(self.bottom_frame, text="Pronto", relief=tk.SUNKEN, anchor=tk.W)
+        self.status_bar.pack(fill=tk.X, side=tk.BOTTOM)
+
     def create_label_and_entry(self, label_text, operation):
         """Crea un'etichetta e una casella di testo per un'operazione."""
         label = ttk.Label(self.second_frame, text=label_text, font=("Helvetica", 10))
@@ -288,12 +295,14 @@ class StringManipulatorApp:
             elif isinstance(widget, scrolledtext.ScrolledText):
                 widget.delete("1.0", tk.END)
                 widget.insert(tk.END, operation(input_text))
+        self.status_bar.config(text="Risultati aggiornati")
         self.logger.info("Risultati aggiornati")
 
 
 # Avvio dell'applicazione
 if __name__ == "__main__":
     root = tk.Tk()
+    root.title("String Manipulator")  # Titolo della finestra
     string_manipulator = StringManipulator()
     app = StringManipulatorApp(root, string_manipulator)
     root.mainloop()
