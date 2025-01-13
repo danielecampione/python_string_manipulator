@@ -7,174 +7,248 @@ from functools import reduce
 from string import Template
 import textwrap
 
-def center_window(window):
-    window.update_idletasks()
-    width = window.winfo_width()
-    height = window.winfo_height()
-    x = (window.winfo_screenwidth() // 2) - (width // 2)
-    y = (window.winfo_screenheight() // 2) - (height // 2)
-    window.geometry(f'{width}x{height}+{x}+{y}')
 
-def close_window():
-    root.destroy()
+# Classe per la gestione della manipolazione delle stringhe
+class StringManipulator:
+    @staticmethod
+    def upper(text):
+        return text.upper()
 
-def update_labels(*args):
-    strInputString = inputString.get()
-    if strInputString:
-        entryUpperCase.delete(0, tk.END)
-        entryUpperCase.insert(0, strInputString.upper())
-        entryLowerCase.delete(0, tk.END)
-        entryLowerCase.insert(0, strInputString.lower())
-        entryCapitalize.delete(0, tk.END)
-        entryCapitalize.insert(0, strInputString.capitalize())
-        entryTitle.delete(0, tk.END)
-        entryTitle.insert(0, strInputString.title())
-        entrySwapCase.delete(0, tk.END)
-        entrySwapCase.insert(0, strInputString.swapcase())
-        entryStrip.delete(0, tk.END)
-        entryStrip.insert(0, strInputString.strip())
-        entryReplace.delete(0, tk.END)
-        entryReplace.insert(0, strInputString.replace('a', 'X'))
-        entrySplit.delete(0, tk.END)
-        entrySplit.insert(0, str(strInputString.split()))
-        entryJoin.delete(0, tk.END)
-        entryJoin.insert(0, '-'.join(strInputString.split()))
-        entryCount.delete(0, tk.END)
-        entryCount.insert(0, str(strInputString.count('a')))
-        entryFind.delete(0, tk.END)
-        entryFind.insert(0, str(strInputString.find('mondo')))
-        entryStartswith.delete(0, tk.END)
-        entryStartswith.insert(0, str(strInputString.startswith('ciao')))
-        entryEndswith.delete(0, tk.END)
-        entryEndswith.insert(0, str(strInputString.endswith('mondo')))
-        entryIsalpha.delete(0, tk.END)
-        entryIsalpha.insert(0, str(strInputString.isalpha()))
-        entryIsdigit.delete(0, tk.END)
-        entryIsdigit.insert(0, str(strInputString.isdigit()))
-        entryIsalnum.delete(0, tk.END)
-        entryIsalnum.insert(0, str(strInputString.isalnum()))
-        entryIsspace.delete(0, tk.END)
-        entryIsspace.insert(0, str(strInputString.isspace()))
-        entryIslower.delete(0, tk.END)
-        entryIslower.insert(0, str(strInputString.islower()))
-        entryIsupper.delete(0, tk.END)
-        entryIsupper.insert(0, str(strInputString.isupper()))
-        entryIstitle.delete(0, tk.END)
-        entryIstitle.insert(0, str(strInputString.istitle()))
-        entryZfill.delete(0, tk.END)
-        entryZfill.insert(0, strInputString.zfill(10))
-        tabella = str.maketrans("ao", "ou")
-        entryTranslate.delete(0, tk.END)
-        entryTranslate.insert(0, strInputString.translate(tabella))
-        entryReSub.delete(0, tk.END)
-        entryReSub.insert(0, re.sub(r'\d+', 'NUMERO', strInputString))
-        entryFormat.delete(0, tk.END)
-        entryFormat.insert(0, 'Ciao, {}'.format(strInputString))
-        entryFString.delete(0, tk.END)
-        entryFString.insert(0, f'Ciao, {strInputString}')
-        entryEncode.delete(0, tk.END)
-        entryEncode.insert(0, strInputString.encode('utf-8'))
-        entryDecode.delete(0, tk.END)
-        entryDecode.insert(0, strInputString.encode('utf-8').decode('utf-8'))
-        entryCounter.delete(0, tk.END)
-        entryCounter.insert(0, str(Counter(strInputString)))
-        entryUnicodedata.delete(0, tk.END)
-        entryUnicodedata.insert(0, unicodedata.name(strInputString[0]) if strInputString else 'Stringa vuota')
-        textTextwrap.delete("1.0", tk.END)
-        textTextwrap.insert(tk.END, textwrap.fill(strInputString, width=20))
-        entryTemplate.delete(0, tk.END)
-        entryTemplate.insert(0, Template('Ciao, $nome!').substitute(nome=strInputString))
-        entryReduce.delete(0, tk.END)
-        entryReduce.insert(0, reduce(lambda x, y: x + ' ' + y, strInputString.split()))
-    else:
-        for entry in all_entries:
-            entry.delete(0, tk.END)
-        textTextwrap.delete("1.0", tk.END)
+    @staticmethod
+    def lower(text):
+        return text.lower()
 
-# Creazione della finestra principale
-root = tk.Tk()
-root.title("String Manipulator")
+    @staticmethod
+    def capitalize(text):
+        return text.capitalize()
 
-# Frame scrollabile
-main_frame = ttk.Frame(root)
-main_frame.pack(fill=tk.BOTH, expand=True)
+    @staticmethod
+    def title(text):
+        return text.title()
 
-canvas = tk.Canvas(main_frame)
-canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    @staticmethod
+    def swapcase(text):
+        return text.swapcase()
 
-scrollbar = ttk.Scrollbar(main_frame, orient=tk.VERTICAL, command=canvas.yview)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    @staticmethod
+    def strip(text):
+        return text.strip()
 
-canvas.configure(yscrollcommand=scrollbar.set)
-canvas.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    @staticmethod
+    def replace(text, old='a', new='X'):
+        return text.replace(old, new)
 
-second_frame = ttk.Frame(canvas)
-canvas.create_window((0, 0), window=second_frame, anchor="nw")
+    @staticmethod
+    def split(text):
+        return str(text.split())
 
-# Variabile per il testo in input
-inputString = tk.StringVar()
-inputString.trace_add('write', update_labels)
+    @staticmethod
+    def join(text, separator='-'):
+        return separator.join(text.split())
 
-# Creazione di una barra testuale per inserire il nome
-inputString_entry = ttk.Entry(second_frame, textvariable=inputString, font=("Helvetica", 16))
-inputString_entry.pack(padx=20, pady=10)
+    @staticmethod
+    def count(text, substring='a'):
+        return str(text.count(substring))
 
-# Creazione delle etichette e delle caselle di testo per i risultati
-all_entries = []
+    @staticmethod
+    def find(text, substring='mondo'):
+        return str(text.find(substring))
 
-def create_label_and_entry(frame, label_text):
-    label = ttk.Label(frame, text=label_text, font=("Helvetica", 10))
-    label.pack(padx=20, pady=5, anchor="w")
-    entry = ttk.Entry(frame, font=("Helvetica", 10), width=50)
-    entry.pack(padx=20, pady=5, anchor="w")
-    all_entries.append(entry)
-    return entry
+    @staticmethod
+    def startswith(text, prefix='ciao'):
+        return str(text.startswith(prefix))
 
-entryUpperCase = create_label_and_entry(second_frame, "In maiuscolo:")
-entryLowerCase = create_label_and_entry(second_frame, "In minuscolo:")
-entryCapitalize = create_label_and_entry(second_frame, "Capitalizzato:")
-entryTitle = create_label_and_entry(second_frame, "Titolo:")
-entrySwapCase = create_label_and_entry(second_frame, "Swapcase:")
-entryStrip = create_label_and_entry(second_frame, "Strip:")
-entryReplace = create_label_and_entry(second_frame, "Replace 'a' con 'X':")
-entrySplit = create_label_and_entry(second_frame, "Split:")
-entryJoin = create_label_and_entry(second_frame, "Join:")
-entryCount = create_label_and_entry(second_frame, "Count 'a':")
-entryFind = create_label_and_entry(second_frame, "Find 'mondo':")
-entryStartswith = create_label_and_entry(second_frame, "Startswith 'ciao':")
-entryEndswith = create_label_and_entry(second_frame, "Endswith 'mondo':")
-entryIsalpha = create_label_and_entry(second_frame, "Isalpha:")
-entryIsdigit = create_label_and_entry(second_frame, "Isdigit:")
-entryIsalnum = create_label_and_entry(second_frame, "Isalnum:")
-entryIsspace = create_label_and_entry(second_frame, "Isspace:")
-entryIslower = create_label_and_entry(second_frame, "Islower:")
-entryIsupper = create_label_and_entry(second_frame, "Isupper:")
-entryIstitle = create_label_and_entry(second_frame, "Istitle:")
-entryZfill = create_label_and_entry(second_frame, "Zfill (10):")
-entryTranslate = create_label_and_entry(second_frame, "Translate:")
-entryReSub = create_label_and_entry(second_frame, "Re.sub:")
-entryFormat = create_label_and_entry(second_frame, "Format:")
-entryFString = create_label_and_entry(second_frame, "F-string:")
-entryEncode = create_label_and_entry(second_frame, "Encode (UTF-8):")
-entryDecode = create_label_and_entry(second_frame, "Decode (UTF-8):")
-entryCounter = create_label_and_entry(second_frame, "Counter:")
-entryUnicodedata = create_label_and_entry(second_frame, "Unicodedata:")
+    @staticmethod
+    def endswith(text, suffix='mondo'):
+        return str(text.endswith(suffix))
 
-# Creazione di una ScrolledText per Textwrap
-labelTextwrap = ttk.Label(second_frame, text="Textwrap:", font=("Helvetica", 10))
-labelTextwrap.pack(padx=20, pady=5, anchor="w")
-textTextwrap = scrolledtext.ScrolledText(second_frame, font=("Helvetica", 10), width=50, height=4)
-textTextwrap.pack(padx=20, pady=5, anchor="w")
+    @staticmethod
+    def isalpha(text):
+        return str(text.isalpha())
 
-entryTemplate = create_label_and_entry(second_frame, "Template:")
-entryReduce = create_label_and_entry(second_frame, "Reduce:")
+    @staticmethod
+    def isdigit(text):
+        return str(text.isdigit())
 
-# Creazione del pulsante "Chiudi"
-close_button = ttk.Button(second_frame, text="Chiudi", command=close_window)
-close_button.pack(pady=10)
+    @staticmethod
+    def isalnum(text):
+        return str(text.isalnum())
 
-# Posizionamento della finestra al centro del desktop
-center_window(root)
+    @staticmethod
+    def isspace(text):
+        return str(text.isspace())
 
-# Avvio del loop principale della finestra
-root.mainloop()
+    @staticmethod
+    def islower(text):
+        return str(text.islower())
+
+    @staticmethod
+    def isupper(text):
+        return str(text.isupper())
+
+    @staticmethod
+    def istitle(text):
+        return str(text.istitle())
+
+    @staticmethod
+    def zfill(text, width=10):
+        return text.zfill(width)
+
+    @staticmethod
+    def translate(text, table=None):
+        if table is None:
+            table = str.maketrans("ao", "ou")
+        return text.translate(table)
+
+    @staticmethod
+    def re_sub(text, pattern=r'\d+', repl='NUMERO'):
+        return re.sub(pattern, repl, text)
+
+    @staticmethod
+    def format(text, template='Ciao, {}'):
+        return template.format(text)
+
+    @staticmethod
+    def f_string(text, template='Ciao, {}'):
+        return f'Ciao, {text}'
+
+    @staticmethod
+    def encode(text, encoding='utf-8'):
+        return text.encode(encoding)
+
+    @staticmethod
+    def decode(text, encoding='utf-8'):
+        return text.encode(encoding).decode(encoding)
+
+    @staticmethod
+    def counter(text):
+        return str(Counter(text))
+
+    @staticmethod
+    def unicodedata(text):
+        return unicodedata.name(text[0]) if text else 'Stringa vuota'
+
+    @staticmethod
+    def textwrap(text, width=20):
+        return textwrap.fill(text, width=width)
+
+    @staticmethod
+    def template(text, template_str='Ciao, $nome!'):
+        return Template(template_str).substitute(nome=text)
+
+    @staticmethod
+    def reduce(text):
+        return reduce(lambda x, y: x + ' ' + y, text.split())
+
+
+# Classe per l'interfaccia grafica
+class StringManipulatorApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("String Manipulator")
+        self.root.geometry("800x600")
+
+        # Variabile per il testo in input
+        self.input_string = tk.StringVar()
+        self.input_string.trace_add('write', self.update_labels)
+
+        # Creazione dell'interfaccia
+        self.create_interface()
+
+    def create_interface(self):
+        """Crea l'interfaccia grafica."""
+        # Frame scrollabile
+        self.main_frame = ttk.Frame(self.root)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.canvas = tk.Canvas(self.main_frame)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.scrollbar = ttk.Scrollbar(self.main_frame, orient=tk.VERTICAL, command=self.canvas.yview)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        self.second_frame = ttk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.second_frame, anchor="nw")
+
+        # Input
+        self.input_entry = ttk.Entry(self.second_frame, textvariable=self.input_string, font=("Helvetica", 16))
+        self.input_entry.pack(padx=20, pady=10)
+
+        # Creazione delle caselle di testo per i risultati
+        self.all_entries = []
+        self.create_label_and_entry("In maiuscolo:", StringManipulator.upper)
+        self.create_label_and_entry("In minuscolo:", StringManipulator.lower)
+        self.create_label_and_entry("Capitalizzato:", StringManipulator.capitalize)
+        self.create_label_and_entry("Titolo:", StringManipulator.title)
+        self.create_label_and_entry("Swapcase:", StringManipulator.swapcase)
+        self.create_label_and_entry("Strip:", StringManipulator.strip)
+        self.create_label_and_entry("Replace 'a' con 'X':", lambda x: StringManipulator.replace(x, 'a', 'X'))
+        self.create_label_and_entry("Split:", StringManipulator.split)
+        self.create_label_and_entry("Join:", StringManipulator.join)
+        self.create_label_and_entry("Count 'a':", lambda x: StringManipulator.count(x, 'a'))
+        self.create_label_and_entry("Find 'mondo':", lambda x: StringManipulator.find(x, 'mondo'))
+        self.create_label_and_entry("Startswith 'ciao':", lambda x: StringManipulator.startswith(x, 'ciao'))
+        self.create_label_and_entry("Endswith 'mondo':", lambda x: StringManipulator.endswith(x, 'mondo'))
+        self.create_label_and_entry("Isalpha:", StringManipulator.isalpha)
+        self.create_label_and_entry("Isdigit:", StringManipulator.isdigit)
+        self.create_label_and_entry("Isalnum:", StringManipulator.isalnum)
+        self.create_label_and_entry("Isspace:", StringManipulator.isspace)
+        self.create_label_and_entry("Islower:", StringManipulator.islower)
+        self.create_label_and_entry("Isupper:", StringManipulator.isupper)
+        self.create_label_and_entry("Istitle:", StringManipulator.istitle)
+        self.create_label_and_entry("Zfill (10):", lambda x: StringManipulator.zfill(x, 10))
+        self.create_label_and_entry("Translate:", StringManipulator.translate)
+        self.create_label_and_entry("Re.sub:", StringManipulator.re_sub)
+        self.create_label_and_entry("Format:", StringManipulator.format)
+        self.create_label_and_entry("F-string:", StringManipulator.f_string)
+        self.create_label_and_entry("Encode (UTF-8):", StringManipulator.encode)
+        self.create_label_and_entry("Decode (UTF-8):", StringManipulator.decode)
+        self.create_label_and_entry("Counter:", StringManipulator.counter)
+        self.create_label_and_entry("Unicodedata:", StringManipulator.unicodedata)
+
+        # Textwrap (ScrolledText)
+        self.create_scrolled_text("Textwrap:", StringManipulator.textwrap)
+
+        self.create_label_and_entry("Template:", StringManipulator.template)
+        self.create_label_and_entry("Reduce:", StringManipulator.reduce)
+
+        # Pulsante Chiudi
+        close_button = ttk.Button(self.second_frame, text="Chiudi", command=self.root.destroy)
+        close_button.pack(pady=10)
+
+    def create_label_and_entry(self, label_text, operation):
+        """Crea un'etichetta e una casella di testo per un'operazione."""
+        label = ttk.Label(self.second_frame, text=label_text, font=("Helvetica", 10))
+        label.pack(padx=20, pady=5, anchor="w")
+        entry = ttk.Entry(self.second_frame, font=("Helvetica", 10), width=50)
+        entry.pack(padx=20, pady=5, anchor="w")
+        self.all_entries.append((entry, operation))
+
+    def create_scrolled_text(self, label_text, operation):
+        """Crea una ScrolledText per operazioni multi-linea."""
+        label = ttk.Label(self.second_frame, text=label_text, font=("Helvetica", 10))
+        label.pack(padx=20, pady=5, anchor="w")
+        text = scrolledtext.ScrolledText(self.second_frame, font=("Helvetica", 10), width=50, height=4)
+        text.pack(padx=20, pady=5, anchor="w")
+        self.all_entries.append((text, operation))
+
+    def update_labels(self, *args):
+        """Aggiorna tutte le caselle di testo in base all'input."""
+        input_text = self.input_string.get()
+        for widget, operation in self.all_entries:
+            if isinstance(widget, ttk.Entry):
+                widget.delete(0, tk.END)
+                widget.insert(0, operation(input_text))
+            elif isinstance(widget, scrolledtext.ScrolledText):
+                widget.delete("1.0", tk.END)
+                widget.insert(tk.END, operation(input_text))
+
+
+# Avvio dell'applicazione
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = StringManipulatorApp(root)
+    root.mainloop()
