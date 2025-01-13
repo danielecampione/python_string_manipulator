@@ -7,6 +7,7 @@ from functools import reduce
 from string import Template
 import textwrap
 import logging
+import colorsys
 
 # Configurazione del logger
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -261,13 +262,14 @@ class StringManipulatorApp:
         self.bottom_frame = ttk.Frame(self.main_frame)
         self.bottom_frame.pack(fill=tk.X, side=tk.BOTTOM)
 
-        # Pulsante Chiudi
-        close_button = ttk.Button(self.bottom_frame, text="Chiudi", command=self.root.destroy)
-        close_button.pack(pady=10)
+        # Pulsante Chiudi normale
+        self.close_button = ttk.Button(self.bottom_frame, text="Chiudi", command=self.root.destroy)
+        self.close_button.pack(pady=10)
 
-        # Barra di stato
+        # Barra di stato con animazione di cambio colore
         self.status_bar = ttk.Label(self.bottom_frame, text="Pronto", relief=tk.SUNKEN, anchor=tk.W)
         self.status_bar.pack(fill=tk.X, side=tk.BOTTOM)
+        self.change_color(self.status_bar)
 
     def create_label_and_entry(self, label_text, operation):
         """Crea un'etichetta e una casella di testo per un'operazione."""
@@ -285,6 +287,17 @@ class StringManipulatorApp:
         text.pack(padx=20, pady=5, anchor="w")
         self.all_entries.append((text, operation))
 
+    def change_color(self, widget, hue=0.0):
+        """Animazione di cambio colore per la barra di stato."""
+        # Usiamo una gamma di colori più tenui (blu e verde)
+        rgb = colorsys.hsv_to_rgb(hue, 0.3, 0.9)  # Saturazione ridotta per colori più tenui
+        hex_color = "#{:02x}{:02x}{:02x}".format(
+            int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255)
+        )
+        widget.config(background=hex_color, foreground="black")  # Testo sempre nero per contrasto
+        hue = (hue + 0.01) % 1.0  # Incrementa la tonalità
+        widget.after(50, self.change_color, widget, hue)
+
     def update_labels(self, *args):
         """Aggiorna tutte le caselle di testo in base all'input."""
         input_text = self.input_string.get()
@@ -299,10 +312,22 @@ class StringManipulatorApp:
         self.logger.info("Risultati aggiornati")
 
 
+# Funzione per l'animazione di fade-in
+def fade_in(window, alpha=0.0):
+    if alpha < 1.0:
+        alpha += 0.02  # Incrementa la trasparenza
+        window.attributes("-alpha", alpha)
+        window.after(10, fade_in, window, alpha)
+    else:
+        window.attributes("-alpha", 1.0)  # Imposta la trasparenza al 100%
+
+
 # Avvio dell'applicazione
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("String Manipulator")  # Titolo della finestra
+    root.attributes("-alpha", 0.0)  # Inizia con la finestra trasparente
+    root.title("String Manipulator")
     string_manipulator = StringManipulator()
     app = StringManipulatorApp(root, string_manipulator)
+    fade_in(root)  # Avvia l'animazione di fade-in
     root.mainloop()
