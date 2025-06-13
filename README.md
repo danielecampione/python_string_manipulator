@@ -42,7 +42,7 @@ sudo apt install python3-pip
 
 sudo pip3 install Pillow
 
-python3 python_space_shooter.py
+python3 string_manipulator_frame.py
 ```
 
 ## Debian 12 (linux)
@@ -74,14 +74,14 @@ sudo apt install python3-pip
 
 sudo pip3 install Pillow
 
-python3 python_space_shooter.py
+python3 string_manipulator_frame.py
 
 # if it doesn't work on Debian
 sudo apt update
 sudo apt install python3-pil
 sudo apt install python3-pil.imagetk
 
-python3 python_space_shooter.py
+python3 string_manipulator_frame.py
 ```
 
 ---------------------
